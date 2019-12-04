@@ -1,40 +1,49 @@
 /**
- * Copyright 2015 Your Name <you@yourhost.com>
+ * Copyright 2019 Nick Struik <you@yourhost.com>
  *
  * @brief Description of My Awesome Game.
  *
  * @file main.cpp
  *
- * @mainpage My Awesome Game
- *
- * @section intro Introduction
- *
- * Detailed description of My Awesome Game.
- *
- * There's even a second paragraph.
+ * @mainpage Invasionz
  */
 #include <rt2d/core.h>
 
-#include "myscene.h"
+#include "menuscene.h"
+#include "gamescene.h"
 
-/// @brief main entry point
+
+
+
 int main( void )
 {
-	// Core instance
 	Core core;
+	
+	std::vector<SceneManager*> scenes;
+	scenes.push_back(new MenuScene()); 
+	scenes.push_back(new GameScene()); 
+	int s = scenes.size();
 
-	// Scene01
-	MyScene* myscene = new MyScene(); // create Scene on the heap
-	while(myscene->isRunning()) { // check status of Scene every frame
-		core.run(myscene); // update and render the current scene
+	// start running with the first Scene
+	SceneManager* scene = scenes[0];
+	int scenecounter = 0;
+	int running = 1;
+	while (running) {
+		scenecounter = scene->activescene;
+		if (scenecounter > s - 1) { scenecounter = 0; scene->activescene = 0; }
+		if (scenecounter < 0) { scenecounter = s - 1; scene->activescene = s - 1; }
+		scene = scenes[scenecounter];
+		core.run(scene); // update and render the current scene
 		core.showFrameRate(5); // show framerate in output every n seconds
+		if (!scene->isRunning()) { running = 0; } // check status of Scene every frame
 	}
-	//core.cleanup(); // cleanup ResourceManager (Textures + Meshes, but not Shaders)
-	delete myscene; // delete Scene and everything in it from the heap to make space for next Scene
 
-	// No need to explicitly clean up the core.
-	// As a local var, core will go out of scope and destroy Renderer->ResourceManager.
-	// ResourceManager destructor also deletes Shaders.
+	// delete all scenes
+	for (int i = 0; i < s; i++) {
+		delete scenes[i];
+		scenes[i] = nullptr;
+	}
+	scenes.clear();
 
 	return 0;
 }

@@ -5,22 +5,23 @@
  *     - Initial commit
  */
 
-#ifndef MYENTITY_H
-#define MYENTITY_H
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
 
-#include <rt2d/entity.h>
+#include <vector>
+#include <rt2d/scene.h>
 
-class MyEntity : public Entity
+class SceneManager: public Scene
 {
 public:
-	MyEntity();
-
-	virtual ~MyEntity();
+	SceneManager();
+	virtual ~SceneManager();
 
 	virtual void update(float deltaTime);
 
-private:
+	static int activescene;
 
+private:
 };
 
-#endif /* MYENTITY_H */
+#endif /* SCENEMANAGER_H */

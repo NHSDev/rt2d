@@ -173,11 +173,15 @@ ENDIF()
 ####################################################################
 IF(MAKE_INVASIONZ)
 	add_executable(invasionz
-		invasionz/main.cpp
+		invasionz/game.cpp
 		invasionz/myentity.cpp
 		invasionz/myentity.h
-		invasionz/myscene.cpp
-		invasionz/myscene.h
+        invasionz/scenemanager.cpp
+		invasionz/scenemanager.h
+        invasionz/menuscene.cpp
+		invasionz/menuscene.h
+		invasionz/gamescene.cpp
+		invasionz/gamescene.h
 	)
 	target_link_libraries(invasionz
 		${ALL_GRAPHICS_LIBS}
