@@ -33,8 +33,10 @@ void SceneManager::update(float deltaTime)
 	// ###############################################################
 	if (input()->getKeyUp(KeyCode::LeftBracket)) {
 		activescene--;
+		std::cout << "Scene--" << std::endl;
 	}
 	if (input()->getKeyUp(KeyCode::RightBracket)) {
 		activescene++;
+		std::cout << "Scene++" << std::endl;
 	}
 }

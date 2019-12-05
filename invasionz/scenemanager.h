@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <rt2d/scene.h>
+#include "basicentity.h"
 
 class SceneManager: public Scene
 {
@@ -20,6 +21,10 @@ public:
 	virtual void update(float deltaTime);
 
 	static int activescene;
+
+protected:
+	std::vector<BasicEntity*> layers;
+
 
 private:
 };

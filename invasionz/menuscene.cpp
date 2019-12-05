@@ -12,7 +12,7 @@
 
 MenuScene::MenuScene() : SceneManager()
 {
-
+	canvas = new Canvas(4);
 }
 
 
@@ -28,3 +28,5 @@ void MenuScene::update(float deltaTime)
 	// ###############################################################
 	SceneManager::update(deltaTime);
 }
+
+

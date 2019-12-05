@@ -10,12 +10,12 @@
 
 #include <rt2d/entity.h>
 
-class MyEntity : public Entity
+class BasicEntity : public Entity
 {
 public:
-	MyEntity();
+	BasicEntity();
 
-	virtual ~MyEntity();
+	virtual ~BasicEntity();
 
 	virtual void update(float deltaTime);
 
