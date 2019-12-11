@@ -24,9 +24,13 @@ public:
 	virtual void update(float deltaTime);
 
 private:
+	void setupStart();
+	void setupTitle();
+
 	Canvas* canvas;
-	AnimatedSprite Enemy_a;
-	AnimatedSprite Enemy_b;
+	PixelSprite title;
+	AnimatedSprite start_a;
+	AnimatedSprite start_b;
 };
 
 #endif /* MENUSCENE_H */

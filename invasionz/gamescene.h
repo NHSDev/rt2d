@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <rt2d/timer.h>
+#include <time.h>
 #include <rt2d/vectorx.h>
 #include <rt2d/canvas.h>
 #include "scenemanager.h"
@@ -18,8 +19,7 @@ struct SI_AnimatedSprite {
 	}
 };
 
-class GameScene : public SceneManager
-{
+class GameScene : public SceneManager {
 public:
 	GameScene();
 
@@ -31,12 +31,15 @@ public:
 
 private:
 
+	void updatePlayer();
+
 	void restart();
 	void setupTurret();
 	void setupPlayer();
 	void setupEnemyA();
 
 	Canvas* canvas;
+	Timer timer;
 	PixelSprite player;
 	PixelSprite turret;
 	PixelSprite ground;

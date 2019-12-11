@@ -23,6 +23,7 @@ public:
 	static int activescene;
 
 protected:
+	unsigned int top_layer;
 	std::vector<BasicEntity*> layers;
 
 

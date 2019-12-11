@@ -173,7 +173,7 @@ ENDIF()
 ####################################################################
 IF(MAKE_INVASIONZ)
 	add_executable(invasionz
-		invasionz/game.cpp
+		invasionz/main.cpp
 		invasionz/basicentity.cpp
 		invasionz/basicentity.h
         invasionz/scenemanager.cpp

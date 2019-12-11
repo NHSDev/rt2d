@@ -6,18 +6,26 @@
 
 #include <fstream>
 #include <sstream>
-
 #include "gamescene.h"
 
 
 GameScene::GameScene() : SceneManager()
 {
-	canvas = new Canvas(4);
+	timer.start();
+
+	canvas = new Canvas(4); // pixelsize
+	layers[0]->addChild(canvas);
+
+	setupTurret();
+	setupPlayer();
+	setupEnemyA();
+
 	restart();
 }
 
 GameScene::~GameScene()
 {
+	layers[0]->removeChild(canvas);
 	delete canvas;
 }
 
@@ -27,19 +35,43 @@ void GameScene::update(float deltaTime)
 	// Let manager do what it needs to do ( Escape key stops the Scene )
 	// ###############################################################
 	SceneManager::update(deltaTime);
+
+	updatePlayer();
 }
+
+
+
+
 
 void GameScene::restart() {
 	canvas->fill(canvas->backgroundcolor);
-	layers[0]->addChild(canvas);
 	player.position.x = canvas->width() / 2;
+}
 
 
-	setupEnemyA();
-	
+void GameScene::updatePlayer() {
+	canvas->clearSprite(player);
+	if (input()->getKey(KeyCode::Left)) {
+		float i = 0;
+		i--;
+		player = player.rotated(i);
+	}
+	if (input()->getKey(KeyCode::Right)) {
+		float i = 0;
+		i++;
+		player = player.rotated(i);
+	}
 	canvas->drawSprite(player);
 }
 
+
+
+
+
+
+// ###############################################################
+// Setup objects
+// ###############################################################
 void GameScene::setupTurret() {
 	char turretsprite[338] = { // 26 * 13
 		0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,
@@ -56,37 +88,21 @@ void GameScene::setupTurret() {
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 	};
+
+	turret.init(turretsprite, 26, 13);
+	turret.position = Pointi(canvas->width() / 2, 8);
 }
 
 
 void GameScene::setupPlayer() {
 	char playersprite[92] = { // 23 * 4
-		0,1,1,0,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0
 	};
 
-	player.init(playersprite, 16, 8);
+	player.init(playersprite, 23, 4);
 	player.position = Pointi(canvas->width() / 2, 8);
 }
 
@@ -107,8 +123,6 @@ void GameScene::setupEnemyA() {
 		1,0,0,1,0,0,0,1,0,0,1,
 		0,1,0,0,1,0,1,0,0,1,0
 	};
-
-
 
 	PixelSprite enemyA0;
 	enemyA0.init(enemyA0sprite, 11, 13);

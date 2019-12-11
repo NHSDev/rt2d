@@ -10,8 +10,7 @@
 
 #include <rt2d/entity.h>
 
-class BasicEntity : public Entity
-{
+class BasicEntity : public Entity {
 public:
 	BasicEntity();
 
