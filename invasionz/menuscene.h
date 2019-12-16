@@ -1,8 +1,7 @@
 #ifndef MENUSCENE_H
 #define MENUSCENE_H
-
 #include <rt2d/canvas.h>
-#include "scenemanager.h"
+#include "superscene.h"
 
 struct AnimatedSprite {
 	Pointi position;
@@ -13,10 +12,9 @@ struct AnimatedSprite {
 	}
 };
 
-class MenuScene : public SceneManager
+class MenuScene : public SuperScene
 {
 public:
-
 	MenuScene();
 
 	virtual ~MenuScene();
@@ -24,13 +22,11 @@ public:
 	virtual void update(float deltaTime);
 
 private:
-	void setupStart();
-	void setupTitle();
-
 	Canvas* canvas;
 	PixelSprite title;
-	AnimatedSprite start_a;
-	AnimatedSprite start_b;
+	PixelSprite line;
+	Timer timer;
+	int i;
 };
 
 #endif /* MENUSCENE_H */

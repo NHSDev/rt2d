@@ -5,18 +5,19 @@
  *     - Initial commit
  */
 
-#ifndef SCENEMANAGER_H
-#define SCENEMANAGER_H
+#ifndef SUPERSCENE_H
+#define SUPERSCENE_H
 
 #include <vector>
 #include <rt2d/scene.h>
+#include <rt2d/text.h>
 #include "basicentity.h"
 
-class SceneManager: public Scene
+class SuperScene: public Scene
 {
 public:
-	SceneManager();
-	virtual ~SceneManager();
+	SuperScene();
+	virtual ~SuperScene();
 
 	virtual void update(float deltaTime);
 
@@ -25,6 +26,7 @@ public:
 protected:
 	unsigned int top_layer;
 	std::vector<BasicEntity*> layers;
+	std::vector<Text*> text;
 
 
 private:

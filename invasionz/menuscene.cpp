@@ -10,8 +10,12 @@
 
 #include "menuscene.h"
 
-MenuScene::MenuScene() : SceneManager() {
+MenuScene::MenuScene() : SuperScene() {
 	canvas = new Canvas(4);
+	layers[0]->addChild(canvas);
+	timer.start();
+	i = 0;
+	line.position = Point2i(0,0);
 }
 
 
@@ -22,74 +26,30 @@ MenuScene::~MenuScene() {
 
 void MenuScene::update(float deltaTime) {
 	// ###############################################################
-	// Let manager do what it needs to do ( Escape key stops the Scene )
+	// Let SS do what it needs to do ( Escape key stops the Scene )
 	// ###############################################################
-	SceneManager::update(deltaTime);
+	SuperScene::update(deltaTime);
+
+	static Vector2f vec = Vector2f(canvas->width() - 1, 0);
+	canvas->clearSprite(line);
+	line.pixels.clear(); // empty pixels array before creating new line
+	line.createLine(vec, WHITE); // vec, color
+	canvas->drawSprite(line);
+
+	float tsec = timer.seconds();
+	if (tsec > 0.5 - deltaTime) {
+		if (i == 0) {
+			text[0]->message("Press Space to start");
+			i++;
+		}
+		else if (i == 1) {
+			text[0]->clearMessage();
+			i--;
+		}
+		timer.start();
+	}
 }
 
-void MenuScene::setupTitle() {
-	char titlesprite[338] = { // 26 * 13
-		0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,
-		0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,
-		0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
-		0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,
-		0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
-		0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
-		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
-		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
-		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
-	};
 
-	title.init(titlesprite, 26, 13);
-	title.position = Pointi(canvas->width() / 2, 8);
-}
 
-void MenuScene::setupStart() {
-	char startA0sprite[143] = { // 11*13
-		0,0,1,0,0,0,0,0,1,0,0,
-		0,0,0,1,0,0,0,1,0,0,0,
-		0,0,1,1,1,1,1,1,1,0,0,
-		0,1,1,0,0,0,0,0,1,1,0,
-		0,1,0,0,4,0,4,0,0,1,0,
-		0,1,0,0,0,0,0,0,0,1,0,
-		0,1,0,1,0,1,0,1,0,1,0,
-		0,1,1,0,1,0,1,0,1,1,0,
-		0,0,1,1,1,1,1,1,1,0,0,
-		0,1,0,1,0,0,0,1,0,1,0,
-		1,0,0,1,0,0,0,1,0,0,1,
-		1,0,0,1,0,0,0,1,0,0,1,
-		0,1,0,0,1,0,1,0,0,1,0
-	};
-
-	PixelSprite startA0;
-	startA0.init(startA0sprite, 11, 13);
-	startA0.position = Pointi(canvas->width() / 2, canvas->height() / 2);
-
-	char startA1sprite[143] = { // 11*13
-		0,0,0,0,1,0,1,0,0,0,0,
-		0,0,0,1,0,0,0,1,0,0,0,
-		0,0,1,1,1,1,1,1,1,0,0,
-		0,1,1,0,0,0,0,0,1,1,0,
-		0,1,0,0,4,0,4,0,0,1,0,
-		0,1,0,0,0,0,0,0,0,1,0,
-		0,1,0,1,0,1,0,1,0,1,0,
-		0,1,1,0,1,0,1,0,1,1,0,
-		0,0,1,1,1,1,1,1,1,0,0,
-		0,1,0,1,0,0,0,1,0,1,0,
-		0,1,0,1,0,0,0,1,0,1,0,
-		0,1,0,0,1,0,1,0,0,1,0,
-		1,0,0,0,0,0,0,0,0,0,1
-	};
-
-	PixelSprite startA1;
-	startA1.init(startA1sprite, 8, 8);
-	startA1.position = Pointi(canvas->width() / 2, canvas->height() / 2);
-
-	//si_enemy_a.addPixelSprite(startA0);
-	//si_enemy_a.addPixelSprite(startA1);
-}
 

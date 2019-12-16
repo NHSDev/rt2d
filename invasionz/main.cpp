@@ -19,13 +19,13 @@ int main( void )
 {
 	Core core;
 	
-	std::vector<SceneManager*> scenes;
+	std::vector<SuperScene*> scenes;
 	scenes.push_back(new MenuScene()); 
 	scenes.push_back(new GameScene()); 
 	int s = scenes.size();
 
 	// start running with the first Scene
-	SceneManager* scene = scenes[0];
+	SuperScene* scene = scenes[0];
 	int scenecounter = 0;
 	int running = 1;
 	while (running) {

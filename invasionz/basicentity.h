@@ -5,8 +5,8 @@
  *     - Initial commit
  */
 
-#ifndef MYENTITY_H
-#define MYENTITY_H
+#ifndef BASICENTITY_H
+#define BASICENTITY_H
 
 #include <rt2d/entity.h>
 

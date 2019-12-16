@@ -6,7 +6,7 @@
 #include <time.h>
 #include <rt2d/vectorx.h>
 #include <rt2d/canvas.h>
-#include "scenemanager.h"
+#include "superscene.h"
 
 #define POINT_OF_NO_RETURN Pointi(-1000,-1000)
 
@@ -19,7 +19,7 @@ struct SI_AnimatedSprite {
 	}
 };
 
-class GameScene : public SceneManager {
+class GameScene : public SuperScene {
 public:
 	GameScene();
 
@@ -31,7 +31,7 @@ public:
 
 private:
 
-	void updatePlayer();
+	void updatePlayer(float deltaTime);
 
 	void restart();
 	void setupTurret();
