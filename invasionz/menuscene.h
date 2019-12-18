@@ -23,7 +23,7 @@ public:
 
 private:
 	Canvas* canvas;
-	PixelSprite title;
+	BasicEntity* title;
 	PixelSprite line;
 	Timer timer;
 	int i;

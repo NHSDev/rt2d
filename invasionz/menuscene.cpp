@@ -16,6 +16,11 @@ MenuScene::MenuScene() : SuperScene() {
 	timer.start();
 	i = 0;
 	line.position = Point2i(0,0);
+	title = new BasicEntity();
+	title->addSprite("assets/title.tga");
+	title->position = Point2(SWIDTH / 2, SHEIGHT / 2);
+	layers[1]->addChild(title);
+	
 }
 
 

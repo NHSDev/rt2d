@@ -37,37 +37,27 @@ void GameScene::update(float deltaTime)
 
 	float tsec = timer.seconds();
 	if (tsec > 0.1 - deltaTime) {
-		canvas->clearSprite(player);
-		canvas->drawSprite(player);
+
+		static float p = 0.0f;
+		static PixelSprite plr = player;
+		canvas->clearSprite(plr);
+		plr = plr.rotated(p);
+		plr.position = Pointi(canvas->width() / 2, 0);
 
 		if (input()->getKey(KeyCode::Left)) {
-			float i = 0;
-			i--;
-
-		}
-		if (input()->getKey(KeyCode::Right)) {
-			static float p = 0.0f;
-			static PixelSprite plr = player;
-			canvas->clearSprite(plr);
-			plr = plr.rotated(p);
-			plr.position = Pointi(canvas->width() / 2, 0);
-			p += HALF_PI / 46;
+			p -= HALF_PI / 46;
 			if (p > TWO_PI) { p -= TWO_PI; }
 			canvas->drawSprite(plr);
 		}
 
-		static float i = 0.0f;
-		static PixelSprite plr = player;
-		canvas->clearSprite(plr);
-		plr = plr.rotated(i);
-		plr.position = Pointi(canvas->width() / 2, 0);
-		i += HALF_PI / 46;
-		if (i > TWO_PI) { i -= TWO_PI; }
+		if (input()->getKey(KeyCode::Right)) {
+			p += HALF_PI / 46;
+			if (p > TWO_PI) { p -= TWO_PI; }
+			canvas->drawSprite(plr);
+		}
 		canvas->drawSprite(plr);
-
 		timer.start();
 	}
-	
 }
 
 
@@ -77,7 +67,6 @@ void GameScene::update(float deltaTime)
 void GameScene::restart() {
 	canvas->fill(canvas->backgroundcolor);
 	player.position.x = canvas->width() / 2;
-
 	canvas->drawSprite(turret);
 }
 

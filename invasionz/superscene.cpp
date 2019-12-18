@@ -45,7 +45,7 @@ void SuperScene::update(float deltaTime) {
 
 	unsigned int s = text.size();
 	for (unsigned int i = 0; i < s; i++) {
-		text[i]->position = Point2(SWIDTH / 3 + 50, SHEIGHT / 2 + 125);
+		text[i]->position = Point2(SWIDTH / 3 + 65, SHEIGHT / 2 + 125);
 	}
 
 	// ###############################################################
