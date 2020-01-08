@@ -35,12 +35,11 @@ private:
 
 	void restart();
 	void setupTurret();
-	void setupPlayer();
 	void setupEnemyA();
 
 	Canvas* canvas;
 	Timer timer;
-	PixelSprite player;
+	PixelSprite barrel;
 	PixelSprite turret;
 	PixelSprite ground;
 	SI_AnimatedSprite si_enemy_a;

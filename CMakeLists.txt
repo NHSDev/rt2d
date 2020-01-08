@@ -176,8 +176,8 @@ IF(MAKE_INVASIONZ)
 		invasionz/main.cpp
 		invasionz/basicentity.cpp
 		invasionz/basicentity.h
-        invasionz/scenemanager.cpp
-		invasionz/scenemanager.h
+        invasionz/superscene.cpp
+		invasionz/superscene.h
         invasionz/menuscene.cpp
 		invasionz/menuscene.h
 		invasionz/gamescene.cpp

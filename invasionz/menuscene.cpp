@@ -1,4 +1,4 @@
-/**
+ /**
  * This class describes MyScene behavior.
  *
  * Copyright 2015 Your Name <you@yourhost.com>
@@ -18,9 +18,9 @@ MenuScene::MenuScene() : SuperScene() {
 	line.position = Point2i(0,0);
 	title = new BasicEntity();
 	title->addSprite("assets/title.tga");
-	title->position = Point2(SWIDTH / 2, SHEIGHT / 2);
+	title->position = Point2(SWIDTH / 2, SHEIGHT / 2 - 75);
+	title->scale = Point2(1, 1);
 	layers[1]->addChild(title);
-	
 }
 
 
