@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <rt2d/timer.h>
-#include <time.h>
 #include <rt2d/vectorx.h>
 #include <rt2d/canvas.h>
 #include "superscene.h"
@@ -30,19 +29,42 @@ public:
 	
 
 private:
+	float rotation = TWO_PI / 4;
+	int bulletupdate = 4;
+	int playerupdate = 1;
+	int enemyupdate = 15;
+	int enemytimer = 10;
 
-	void updatePlayer(float deltaTime);
-
-	void restart();
 	void setupTurret();
+	void setupBullet();
 	void setupEnemyA();
+	void setupEnemyGrid();
+	void setupExplosion();
+	
+	void restart();
+	void updatePlayer(float deltaTime);
+	void updateLaser();
+	void updateEnemies();
+	void updateBullets();
+
+	std::vector<SI_AnimatedSprite> enemies;
+	std::vector<PixelSprite> bullets;
 
 	Canvas* canvas;
 	Timer timer;
+	Timer fpsTimer;
+	Timer shootTimer;
+	Timer laserTimer;
+
 	PixelSprite barrel;
 	PixelSprite turret;
+	PixelSprite bullet;
+	PixelSprite laser;
 	PixelSprite ground;
+	PixelSprite explosion;
 	SI_AnimatedSprite si_enemy_a;
+
+	Pointi enemycenter;
 };
 
 #endif /* GAMESCENE_H */

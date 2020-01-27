@@ -36,7 +36,6 @@ void MenuScene::update(float deltaTime) {
 	SuperScene::update(deltaTime);
 
 	static Vector2f vec = Vector2f(canvas->width() - 1, 0);
-	canvas->clearSprite(line);
 	line.pixels.clear(); // empty pixels array before creating new line
 	line.createLine(vec, WHITE); // vec, color
 	canvas->drawSprite(line);
@@ -54,7 +53,3 @@ void MenuScene::update(float deltaTime) {
 		timer.start();
 	}
 }
-
-
-
-
