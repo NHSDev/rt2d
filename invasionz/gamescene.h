@@ -38,14 +38,14 @@ private:
 	void setupTurret();
 	void setupBullet();
 	void setupEnemyA();
-	void setupEnemyGrid();
+	void startEnemySpawn();
 	void setupExplosion();
 	
 	void restart();
 	void updatePlayer(float deltaTime);
 	void updateLaser();
 	void updateEnemies();
-	void updateBullets();
+	void checkEnemiesForLaser();
 
 	std::vector<SI_AnimatedSprite> enemies;
 	std::vector<PixelSprite> bullets;
@@ -54,6 +54,7 @@ private:
 	Timer timer;
 	Timer fpsTimer;
 	Timer shootTimer;
+	Timer enemyTimer;
 	Timer laserTimer;
 
 	PixelSprite barrel;
@@ -62,9 +63,7 @@ private:
 	PixelSprite laser;
 	PixelSprite ground;
 	PixelSprite explosion;
-	SI_AnimatedSprite si_enemy_a;
-
-	Pointi enemycenter;
+	SI_AnimatedSprite si_enemy;
 };
 
 #endif /* GAMESCENE_H */

@@ -22,6 +22,8 @@ GameScene::GameScene() : SuperScene()
 	setupBullet();
 	ground.position = Point2i(0, 0);
 
+	srand(time(NULL));
+
 	restart();
 }
 
@@ -41,15 +43,26 @@ void GameScene::update(float deltaTime)
 	float tsec = timer.seconds();
 	if (tsec > 0.01 - deltaTime) {
 		static int counter = 0;
+		
 
 		// player bullets
 		if (counter%bulletupdate / 4 == 0) {
-			updateBullets();
 			updateLaser();
 		}
 
+		if (input()->getKey(KeyCode::Space)) {
+			if (shootTimer.seconds() > 0.5f) {
+				canvas->drawSprite(laser);
+				shootTimer.start();
+				/*PixelSprite b = bullet; // copy sprites etc
+				b.position = barrel.position;
+				bullets.push_back(b);
+				shootTimer.start();*/
+			}
+		}
+
 		// player update
-		if (counter%playerupdate == 0) {
+		if (counter%playerupdate / 20 == 0) {
 			updatePlayer(deltaTime);
 		}
 
@@ -57,24 +70,14 @@ void GameScene::update(float deltaTime)
 			updateEnemies();
 		}
 
+		checkEnemiesForLaser();
 		counter++;
 		timer.start();
 	}
 
-	if (input()->getKey(KeyCode::Space)) {
-		if (shootTimer.seconds() > 1.0f) {
-			canvas->drawSprite(laser);
-			canvas->drawSprite(turret);
-			canvas->drawSprite(barrel);
-			shootTimer.start();
-			/*PixelSprite b = bullet; // copy sprites etc
-			b.position = barrel.position;
-			bullets.push_back(b);
-			shootTimer.start();*/
-		}
+	if (tsec > 0.01) {
+		startEnemySpawn();
 	}
-
-
 }
 
 void GameScene::restart() {
@@ -83,9 +86,6 @@ void GameScene::restart() {
 	barrel.position.y = 1;
 	
 	bullets.clear();
-	enemycenter = Pointi(canvas->width() / 2, canvas->height() / 2);
-	setupEnemyGrid();
-
 
 	static Vector2f vec = Vector2f(canvas->width() - 1, 0);
 	canvas->clearSprite(ground);
@@ -94,6 +94,8 @@ void GameScene::restart() {
 	barrel.pixels.clear();
 	ground.pixels.clear(); // empty pixels array before creating new line
 	ground.createLine(vec, WHITE); // vec, color
+
+	
 	canvas->drawSprite(ground);
 	canvas->drawSprite(turret);
 	canvas->drawSprite(barrel);
@@ -108,7 +110,7 @@ void GameScene::updatePlayer(float deltaTime) {
 
 	if (rotation <= 2.8) {
 		if (input()->getKey(KeyCode::Left)) {
-			rotation += PI / 60;
+			rotation += PI / 120;
 			if (rotation < 0) { rotation -= TWO_PI; }
 			canvas->drawSprite(barrel);
 		}
@@ -116,7 +118,7 @@ void GameScene::updatePlayer(float deltaTime) {
 
 	if (rotation >= 0.35) {
 		if (input()->getKey(KeyCode::Right)) {
-			rotation -= PI / 60;
+			rotation -= PI / 120;
 			if (rotation < 0) { rotation += TWO_PI; }
 			canvas->drawSprite(barrel);
 		}
@@ -128,13 +130,12 @@ void GameScene::updatePlayer(float deltaTime) {
 void GameScene::updateLaser() 
 {
 	static int counting = 0;
-	static Vector2f vec = Vector2f(155, 0);
+	static Vector2f vec = Vector2f(160, 0);
 	canvas->clearSprite(laser);
 	laser.pixels.clear(); // empty pixels array before creating new line
 	laser.createLine(vec, GREEN); // vec, color
 	laser.position = barrel.position;
 	vec.rotation(rotation);
-	
 }
 
 void GameScene::updateEnemies()
@@ -144,12 +145,11 @@ void GameScene::updateEnemies()
 
 	std::vector<SI_AnimatedSprite>::iterator it = enemies.begin();
 	while (it != enemies.end()) {
+		int todelete = 0;
 
-		//
-
-		// clear, update, draw
 		canvas->clearSprite((*it).frames[0]);
 		canvas->clearSprite((*it).frames[1]);
+		(*it).position.y -= 1;
 		(*it).frames[0].position = (*it).position;
 		(*it).frames[1].position = (*it).position;
 
@@ -167,25 +167,32 @@ void GameScene::updateEnemies()
 	counter++;
 }
 
-
-void GameScene::updateBullets()
+void GameScene::checkEnemiesForLaser()
 {
-	std::vector<PixelSprite>::iterator it = bullets.begin();
-	while (it != bullets.end()) {
+	std::vector<SI_AnimatedSprite>::iterator it = enemies.begin();
+	while (it != enemies.end()) {
 		int todelete = 0;
 
-		canvas->clearSprite((*it));
-		(*it).position.y += 1;
-		canvas->drawSprite((*it));
+		// check if player_bullet hits this enemy
 
-		// above the screen
-		if ((*it).position.y > canvas->height()) {
-			todelete = 1;
+
+		Pointi epos = (*it).position;
+		Pointi lpos = (laser).position;
+
+		int left = epos.x - 6; // 8 or 11 wide
+		int right = epos.x + 6;
+		int top = epos.y + 4;
+		int bottom = epos.y - 4;
+
+		if (lpos.x > left && lpos.x < right && lpos.y < top && lpos.y > bottom) {
+			explosion.position = epos;
 		}
-		// actually delete the bullet
+
+		// actually delete the enemy
 		if (todelete == 1) {
-			canvas->clearSprite((*it));
-			it = bullets.erase(it);
+			canvas->clearSprite((*it).frames[0]);
+			canvas->clearSprite((*it).frames[1]);
+			it = enemies.erase(it);
 		}
 		else {
 			++it;
@@ -196,20 +203,18 @@ void GameScene::updateBullets()
 // ###############################################################
 // Setup objects
 // ###############################################################
-void GameScene::setupEnemyGrid()
+void GameScene::startEnemySpawn()
 {
-	enemies.clear();
-	size_t width = 16;
-	for (size_t y = 0; y < 1; y++) {
-		for (size_t x = 0; x < width; x++) {
+	int wave_size = 2;
+	for (size_t i = 0; i < wave_size; i++)
+	{		
+			int height = canvas->height() + 20;
+			int width = 10;
+			width += (rand() % 300);
 			SI_AnimatedSprite e;
-			if (y == 0) { e = si_enemy_a; }
-			if (y == 1) { e = si_enemy_a; }
-
-			e.position = Pointi((x * 16) - ((width / 2) * 16), 60 - (y * 16));
-			e.velocity = Pointi(1, 0);
+			e = si_enemy;
+			e.position = Pointi(width, height);
 			enemies.push_back(e);
-		}
 	}
 }
 
@@ -306,7 +311,7 @@ void GameScene::setupEnemyA() {
 	enemyA1.init(enemyA1sprite, 11, 13);
 	enemyA1.position = Pointi(canvas->width() / 2, canvas->height() / 2);
 
-	si_enemy_a.addPixelSprite(enemyA0);
-	si_enemy_a.addPixelSprite(enemyA1);
+	si_enemy.addPixelSprite(enemyA0);
+	si_enemy.addPixelSprite(enemyA1);
 }
 
