@@ -34,9 +34,9 @@ private:
 	int playerupdate = 1;
 	int enemyupdate = 15;
 	int enemytimer = 10;
+	int needRestart = 0;
 
 	void setupTurret();
-	void setupBullet();
 	void setupEnemyA();
 	void startEnemySpawn();
 	void setupExplosion();
@@ -46,9 +46,9 @@ private:
 	void updateLaser();
 	void updateEnemies();
 	void checkEnemiesForLaser();
+	void checkEnemiesForGround();
 
 	std::vector<SI_AnimatedSprite> enemies;
-	std::vector<PixelSprite> bullets;
 
 	Canvas* canvas;
 	Timer timer;

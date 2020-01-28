@@ -19,7 +19,6 @@ GameScene::GameScene() : SuperScene()
 
 	setupTurret();
 	setupEnemyA();
-	setupBullet();
 	ground.position = Point2i(0, 0);
 
 	srand(time(NULL));
@@ -71,6 +70,7 @@ void GameScene::update(float deltaTime)
 		}
 
 		checkEnemiesForLaser();
+		checkEnemiesForGround();
 		counter++;
 		timer.start();
 	}
@@ -78,14 +78,17 @@ void GameScene::update(float deltaTime)
 	if (tsec > 0.01) {
 		startEnemySpawn();
 	}
+
+	if (needRestart == 1) {
+		needRestart = 0;
+		restart();
+	}
 }
 
 void GameScene::restart() {
 	canvas->fill(canvas->backgroundcolor);
 	barrel.position.x = canvas->width() / 2;
 	barrel.position.y = 1;
-	
-	bullets.clear();
 
 	static Vector2f vec = Vector2f(canvas->width() - 1, 0);
 	canvas->clearSprite(ground);
@@ -95,7 +98,6 @@ void GameScene::restart() {
 	ground.pixels.clear(); // empty pixels array before creating new line
 	ground.createLine(vec, WHITE); // vec, color
 
-	
 	canvas->drawSprite(ground);
 	canvas->drawSprite(turret);
 	canvas->drawSprite(barrel);
@@ -173,16 +175,14 @@ void GameScene::checkEnemiesForLaser()
 	while (it != enemies.end()) {
 		int todelete = 0;
 
-		// check if player_bullet hits this enemy
-
-
+		// check if laser hits this enemy
 		Pointi epos = (*it).position;
-		Pointi lpos = (laser).position;
+		Pointi lpos = laser.position;
 
-		int left = epos.x - 6; // 8 or 11 wide
-		int right = epos.x + 6;
-		int top = epos.y + 4;
-		int bottom = epos.y - 4;
+		int left = epos.x - 7; // 8 or 11 wide
+		int right = epos.x + 7;
+		int top = epos.y + 6;
+		int bottom = epos.y - 6;
 
 		if (lpos.x > left && lpos.x < right && lpos.y < top && lpos.y > bottom) {
 			explosion.position = epos;
@@ -193,6 +193,20 @@ void GameScene::checkEnemiesForLaser()
 			canvas->clearSprite((*it).frames[0]);
 			canvas->clearSprite((*it).frames[1]);
 			it = enemies.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+}
+
+void GameScene::checkEnemiesForGround()
+{
+	std::vector<SI_AnimatedSprite>::iterator it = enemies.begin();
+	while (it != enemies.end()) {	
+		if((*it).position.y < 7) {
+			needRestart = 1;
+			++it;
 		}
 		else {
 			++it;
@@ -240,15 +254,6 @@ void GameScene::setupTurret() {
 
 	turret.init(turretsprite, 15, 15);
 	turret.position = Pointi(canvas->width() / 2, 0);
-}
-
-void GameScene::setupBullet() {
-	char bulletsprite[1]{
-		5
-	};
-
-	bullet.init(bulletsprite, 1, 1);
-	bullet.position = barrel.position;
 }
 
 void GameScene::setupExplosion() {
